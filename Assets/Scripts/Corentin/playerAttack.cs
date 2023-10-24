@@ -6,6 +6,8 @@ public class playerAttack : MonoBehaviour
 {
     // Fields
 
+    [SerializeField] private LayerMask _ennemyLayerMask;
+
     [SerializeField] private GameObject _spell1Prefab;
     [SerializeField] private GameObject _spell2Prefab;
     [SerializeField] private GameObject _spell3Prefab;
@@ -53,32 +55,48 @@ public class playerAttack : MonoBehaviour
         }
     }
 
-    private void UseSpell1(Vector3 attackOrigin, int damageValue, float radius)
+    private void UseSpell1(Vector3 attackOrigin, int damageValue, float radius)     // Faible dégats de zone
     {
         GameObject att = Instantiate(_spell1Prefab, attackOrigin, Quaternion.identity);
-        SphereCollider collider = att.GetComponent<SphereCollider>();
-        collider.radius = radius;
+        Collider[] hitCollider = Physics.OverlapSphere(transform.position, radius, _ennemyLayerMask);
     }
-    private void UseSpell2(Vector3 attackOrigin, int damageValue, float radius)
+    private void UseSpell2(Vector3 attackOrigin, int damageValue, float radius)     // Fort dégats précis
     {
         GameObject att = Instantiate(_spell2Prefab, attackOrigin, Quaternion.identity);
-        SphereCollider collider = att.GetComponent<SphereCollider>();
-        collider.radius = radius;
+        Collider[] hitCollider = Physics.OverlapSphere(transform.position, radius, _ennemyLayerMask);
     }
-    private void UseSpell3(Vector3 attackOrigin, int slowValue, float radius)
+    private void UseSpell3(Vector3 attackOrigin, int slowValue, float radius)       // Freeze
     {
         GameObject att = Instantiate(_spell3Prefab, attackOrigin, Quaternion.identity);
-        SphereCollider collider = att.GetComponent<SphereCollider>();
-        collider.radius = radius;
+        Collider[] hitCollider = Physics.OverlapSphere(transform.position, radius, _ennemyLayerMask);
     }
 
-    // Start is called before the first frame update
+    private void DamageSpell(Collider[] colliders, int damageValue)
+    {
+        foreach (Collider collider in colliders)
+        {
+            if (collider.CompareTag("Ennemy"))
+            {
+                // !!!!! Retirer la vie des ennemis
+            }
+        }
+    }
+    private void FreezeSpell(Collider[] colliders, int slowValue)
+    {
+        foreach(Collider collider in colliders)
+        {
+            if (collider.CompareTag("Ennemy"))
+            {
+                // !!!!! Freeze ennemies
+            }
+        }
+    }
+
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Mouse0))

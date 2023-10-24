@@ -21,12 +21,8 @@ public class Spell1Behavior : AttackBehavior
 
     IEnumerator SpellTimeCast()
     {
-        float _currentDuration = _duration;
-        while (_currentDuration <= 0f)
-        {
-            _currentDuration -= Time.deltaTime;
-            yield return null;
-        }
+        yield return new WaitForSeconds(_duration);
+
         Destroy(gameObject);
         yield return null;
     }
