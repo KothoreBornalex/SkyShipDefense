@@ -31,15 +31,24 @@ public class playerAttack : MonoBehaviour
     }
     public void ChangeSpell1Level(int index)
     {
-        _spell1Level = index;
+        if (index > _spell1Level)
+        {
+            _spell1Level = index;
+        }
     }
     public void ChangeSpell2Level(int index)
     {
-        _spell2Level = index;
+        if (index > _spell2Level)
+        {
+            _spell2Level = index;
+        }
     }
     public void ChangeSpell3Level(int index)
     {
-        _spell3Level = index;
+        if (index > _spell3Level)
+        {
+            _spell3Level = index;
+        }
     }
 
     private void Attack()

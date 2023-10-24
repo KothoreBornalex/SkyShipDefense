@@ -10,6 +10,11 @@ public class UpgradeUIManager : MonoBehaviour
     [SerializeField] private RectTransform _openPosition;
     [SerializeField] private RectTransform _closedPosition;
 
+    [SerializeField] private RectTransform _upgradesOpenPosition;
+    [SerializeField] private RectTransform _upgradesClosePosition;
+
+    [SerializeField] private RectTransform _upgradesPack;
+
     private bool _isOpen;
 
     [SerializeField] private float _slideSpeed;
@@ -48,13 +53,19 @@ public class UpgradeUIManager : MonoBehaviour
     IEnumerator OpenUpgradePanel()
     {
         Vector3 positionTemp = _upgradeSkillsPanel.position;
+
+        Vector3 upPositionTemp = _upgradesPack.position;
         
-        while ((_upgradeSkillsPanel.position.y != _openPosition.position.y) && _isOpen)
+        while ((_upgradeSkillsPanel.position.y != _openPosition.position.y) && (_upgradesPack.position != _upgradesOpenPosition.position) && _isOpen)
         {
 
             positionTemp.y = Mathf.Lerp(_upgradeSkillsPanel.position.y, _openPosition.position.y, Time.deltaTime * _slideSpeed);
 
+            upPositionTemp.y = Mathf.Lerp(_upgradesPack.position.y, _upgradesOpenPosition.position.y, Time.deltaTime* _slideSpeed * 4f);
+
             _upgradeSkillsPanel.position = positionTemp;
+
+            _upgradesPack.position = upPositionTemp;
 
             yield return null;
         }
@@ -65,11 +76,17 @@ public class UpgradeUIManager : MonoBehaviour
     {
         Vector3 positionTemp = _upgradeSkillsPanel.position;
 
-        while ((_upgradeSkillsPanel.position.y != _closedPosition.position.y) && !_isOpen)
+        Vector3 upPositionTemp = _upgradesPack.position;
+
+        while ((_upgradeSkillsPanel.position.y != _closedPosition.position.y) && (_upgradesPack.position != _upgradesClosePosition.position) && !_isOpen)
         {
             positionTemp.y = Mathf.Lerp(_upgradeSkillsPanel.position.y, _closedPosition.position.y, Time.deltaTime * _slideSpeed);
 
+            upPositionTemp.y = Mathf.Lerp(_upgradesPack.position.y, _upgradesClosePosition.position.y, Time.deltaTime * _slideSpeed * 4f);
+
             _upgradeSkillsPanel.position = positionTemp;
+
+            _upgradesPack.position = upPositionTemp;
 
             yield return null;
         }
