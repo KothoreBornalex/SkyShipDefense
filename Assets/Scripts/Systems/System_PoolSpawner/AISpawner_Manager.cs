@@ -5,28 +5,13 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Pool;
+using static AI_Class;
 
 public class AISpawner_Manager : MonoBehaviour
 {
 
     #region Classes & Enums Set Up
-    public enum FactionsEnum
-    {
-        Orc = 0,
-        Elf = 1,
-        Necromancer = 2,
-        Human = 3
-    }
-    public enum SoldiersEnum
-    {
-        Larbin_A = 0,
-        Larbin_B = 1,
-        Larbin_C = 2,
-        LittleChief = 3,
-        Chief = 4,
-        BigChief = 5,
-    }
-
+    
     [System.Serializable]
     public class PoolClass
     {

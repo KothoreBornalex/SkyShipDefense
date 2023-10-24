@@ -26,9 +26,11 @@ public class AI_Manager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        /*
         foreach(AI_Class AI in _instancesList)
         {
             AI.Rigidbody.MovePosition(AI.Transform.position + movingVector);
         }
+        */
     }
 }
