@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Spell1Behavior : AttackBehavior
 {
-
     [SerializeField] private float _duration;
 
     // Start is called before the first frame update
