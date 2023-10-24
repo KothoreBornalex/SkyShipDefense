@@ -11,7 +11,7 @@ public class Spell3Behavior : AttackBehavior
     // Start is called before the first frame update
     void Start()
     {
-
+        StartCoroutine(SpellTimeCast());
     }
 
     // Update is called once per frame
