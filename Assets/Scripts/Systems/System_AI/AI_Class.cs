@@ -36,6 +36,7 @@ public class AI_Class : MonoBehaviour, IStatistics
     [SerializeField] private MeshRenderer _meshRenderer;
     [SerializeField, Expandable] private AI_Data _ai_Data;
     [SerializeField] private bool _setChase;
+    private int _targetID;
 
     [SerializeField] private WeaponsScriptableObject _weaponsList;
     private List<Statistics> _aiStatistics = new List<Statistics>();
@@ -57,17 +58,21 @@ public class AI_Class : MonoBehaviour, IStatistics
 
     private void Start()
     {
+        _targetID = Random.Range(0, GameManager.instance.Objectifs.Length);
+
         _seeker = GetComponent<Seeker>();
         _destination = GetComponent<AIDestinationSetter>();
         _currentWeaponIndex = GetWeaponIndex(_unitType);
 
         InitializeStats();
-
     }
 
 
     private void Update()
     {
+
+        HandleChase();
+
         /*
         if (!_isAlerted)
         {
@@ -84,25 +89,26 @@ public class AI_Class : MonoBehaviour, IStatistics
     #region Patrol & Chases Functions
     public void HandleChase()
     {
-        /*
+        
         if (!_setChase)
         {
-            _destination.target = PlayerStateMachine.instance.transform;
+            _destination.target = GameManager.instance.Objectifs[_targetID];
             _setChase = true;
         }
 
-        if (Vector3.Distance(transform.position, PlayerStateMachine.instance.transform.position) > _ai_Data.AttackRange && _destination.target != PlayerStateMachine.instance.transform)
+        if (Vector3.Distance(transform.position, GameManager.instance.Objectifs[_targetID].position) > _ai_Data.AttackRange && _destination.target != GameManager.instance.Objectifs[_targetID])
         {
-            _destination.target = PlayerStateMachine.instance.transform;
+            _destination.target = GameManager.instance.Objectifs[_targetID];
         }
-        else if(Vector3.Distance(transform.position, PlayerStateMachine.instance.transform.position) <= _ai_Data.AttackRange)
+        else if(Vector3.Distance(transform.position, GameManager.instance.Objectifs[_targetID].position) <= _ai_Data.AttackRange)
         {
             _destination.target = null;
 
             _attackTimer += Time.deltaTime;
-            HandleAIAttack();
+            //HandleAIAttack();
+            Debug.Log("Attack !!");
         }
-        */
+        
     }
 
     public void HandlePatrol()

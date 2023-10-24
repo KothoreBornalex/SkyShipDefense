@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4515516773380380537}
+  - component: {fileID: -9125088251688427095}
   - component: {fileID: 310044983318374637}
   - component: {fileID: 7739295692774149735}
   - component: {fileID: 4225649568417930775}
@@ -35,6 +36,26 @@ Transform:
   - {fileID: 29748444836329169}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-9125088251688427095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7121351610798121874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80b4144acd8cc9f45bc296775a979dcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _unitType: 0
+  _meshRenderer: {fileID: 0}
+  _ai_Data: {fileID: 11400000, guid: 16b66146305099941988ad6530895f0e, type: 2}
+  _setChase: 0
+  _weaponsList: {fileID: 11400000, guid: 9fdf729682765484cb94de0d3e8dece8, type: 2}
+  patrolWayPoints: []
+  _attackFrequency: 0
+  _bulletSpawnPoint: {fileID: 0}
 --- !u!54 &310044983318374637
 Rigidbody:
   m_ObjectHideFlags: 0

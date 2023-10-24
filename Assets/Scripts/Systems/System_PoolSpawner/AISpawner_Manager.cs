@@ -40,6 +40,9 @@ public class AISpawner_Manager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        StartPoolsInitialization();
+        StartPoolUnitInitialization();
     }
     #endregion
 
@@ -51,10 +54,11 @@ public class AISpawner_Manager : MonoBehaviour
     [SerializeField] private SO_AI_SpawnList _spawnListData;
     private List<PoolList> _factionPoolsList = new List<PoolList>();
 
+
+
     private void Start()
     {
-        StartPoolsInitialization();
-        StartPoolUnitInitialization();
+        
     }
 
     private void Update()
