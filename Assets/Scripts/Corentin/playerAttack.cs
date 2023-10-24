@@ -75,7 +75,6 @@ public class playerAttack : MonoBehaviour
                 default:
                     Debug.LogWarning("Erreur ! Aucune attaque reconnue !");
                     break;
-
             }
 
         }
@@ -85,16 +84,19 @@ public class playerAttack : MonoBehaviour
     {
         GameObject att = Instantiate(_spell1Prefab, attackOrigin, Quaternion.identity);
         Collider[] hitCollider = Physics.OverlapSphere(transform.position, radius, _ennemyLayerMask);
+        DamageSpell(hitCollider, damageValue);
     }
     private void UseSpell2(Vector3 attackOrigin, int damageValue, float radius)     // Fort dégats précis
     {
         GameObject att = Instantiate(_spell2Prefab, attackOrigin, Quaternion.identity);
         Collider[] hitCollider = Physics.OverlapSphere(transform.position, radius, _ennemyLayerMask);
+        DamageSpell(hitCollider, damageValue);
     }
     private void UseSpell3(Vector3 attackOrigin, int slowValue, float radius)       // Freeze
     {
         GameObject att = Instantiate(_spell3Prefab, attackOrigin, Quaternion.identity);
         Collider[] hitCollider = Physics.OverlapSphere(transform.position, radius, _ennemyLayerMask);
+        SlowSpell(hitCollider, slowValue);
     }
 
     private void DamageSpell(Collider[] colliders, int damageValue)
@@ -107,13 +109,13 @@ public class playerAttack : MonoBehaviour
             }
         }
     }
-    private void FreezeSpell(Collider[] colliders, int slowValue)
+    private void SlowSpell(Collider[] colliders, int slowValue)
     {
         foreach(Collider collider in colliders)
         {
             if (collider.CompareTag("Ennemy"))
             {
-                // !!!!! Freeze ennemies
+                // !!!!! Slow ennemies
             }
         }
     }
