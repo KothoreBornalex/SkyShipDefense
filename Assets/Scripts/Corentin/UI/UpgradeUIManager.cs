@@ -12,8 +12,6 @@ public class UpgradeUIManager : MonoBehaviour
 
     private bool _isOpen;
 
-    private bool _stopSliding;
-
     [SerializeField] private float _slideSpeed;
 
     // Properties
@@ -23,14 +21,15 @@ public class UpgradeUIManager : MonoBehaviour
     // Methods
     public void UpgradeSkillsPanelSlide()
     {
-        //_stopSliding = true;
         if( _isOpen)
         {
+            _isOpen = false;
             Debug.Log("Close");
             StartCoroutine(CloseUpgradePanel());
         }
         else
         {
+            _isOpen = true;
             Debug.Log("Open");
             StartCoroutine(OpenUpgradePanel());
         }
@@ -51,29 +50,32 @@ public class UpgradeUIManager : MonoBehaviour
     IEnumerator OpenUpgradePanel()
     {
         Vector3 positionTemp = _upgradeSkillsPanel.position;
-
-        while ((_upgradeSkillsPanel.position.y != _openPosition.position.y) && !_stopSliding)
+        
+        while ((_upgradeSkillsPanel.position.y != _openPosition.position.y) && _isOpen)
         {
+
             positionTemp.y = Mathf.Lerp(_upgradeSkillsPanel.position.y, _openPosition.position.y, Time.deltaTime * _slideSpeed);
 
             _upgradeSkillsPanel.position = positionTemp;
+
+            yield return null;
         }
 
-        _stopSliding = false;
         yield return null;
     }
     IEnumerator CloseUpgradePanel()
     {
         Vector3 positionTemp = _upgradeSkillsPanel.position;
 
-        while ((_upgradeSkillsPanel.position.y != _closedPosition.position.y) && !_stopSliding)
+        while ((_upgradeSkillsPanel.position.y != _closedPosition.position.y) && !_isOpen)
         {
             positionTemp.y = Mathf.Lerp(_upgradeSkillsPanel.position.y, _closedPosition.position.y, Time.deltaTime * _slideSpeed);
 
             _upgradeSkillsPanel.position = positionTemp;
+
+            yield return null;
         }
 
-        _stopSliding = false;
         yield return null;
     }
 }
