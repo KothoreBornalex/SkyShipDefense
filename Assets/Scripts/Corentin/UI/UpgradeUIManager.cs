@@ -49,9 +49,9 @@ public class UpgradeUIManager : MonoBehaviour
     {
         if (_playerAttack.Spell1Level != 0)
         {
-            if (_upgradeButtons[_playerAttack.Spell1Level].GetComponent<Image>().color != _upgradedColor)
+            if (_upgradeButtons[_playerAttack.Spell1Level - 1].GetComponent<Image>().color != _upgradedColor)
             {
-                _upgradeButtons[_playerAttack.Spell1Level].GetComponent<Image>().color = _upgradedColor;
+                _upgradeButtons[_playerAttack.Spell1Level - 1].GetComponent<Image>().color = _upgradedColor;
             }
         }
         
