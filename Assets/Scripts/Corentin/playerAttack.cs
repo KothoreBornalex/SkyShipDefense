@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class playerAttack : MonoBehaviour
 {
@@ -20,8 +21,12 @@ public class playerAttack : MonoBehaviour
 
     [SerializeField] private PlayerAttacksData _playerAttacksData;
 
-    
+
+
     // Properties
+    public int Spell1Level { get => _spell1Level; set => _spell1Level = value; }
+    public int Spell2Level { get => _spell2Level; set => _spell2Level = value; }
+    public int Spell3Level { get => _spell3Level; set => _spell3Level = value; }
 
 
     // Methods
@@ -31,21 +36,21 @@ public class playerAttack : MonoBehaviour
     }
     public void ChangeSpell1Level(int index)
     {
-        if (index > _spell1Level)
+        if (index == _spell1Level + 1)
         {
             _spell1Level = index;
         }
     }
     public void ChangeSpell2Level(int index)
     {
-        if (index > _spell2Level)
+        if (index == _spell2Level + 1)
         {
             _spell2Level = index;
         }
     }
     public void ChangeSpell3Level(int index)
     {
-        if (index > _spell3Level)
+        if (index == _spell3Level + 1)
         {
             _spell3Level = index;
         }
@@ -122,7 +127,7 @@ public class playerAttack : MonoBehaviour
 
     void Start()
     {
-        
+
     }
 
     void Update()

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UpgradeUIManager : MonoBehaviour
 {
@@ -18,6 +19,12 @@ public class UpgradeUIManager : MonoBehaviour
     private bool _isOpen;
 
     [SerializeField] private float _slideSpeed;
+
+    [SerializeField] private Button[] _upgradeButtons;
+    [SerializeField] private Color _upgradedColor;
+
+    [SerializeField] private playerAttack _playerAttack;
+
 
     // Properties
 
@@ -38,6 +45,34 @@ public class UpgradeUIManager : MonoBehaviour
         }
     }
 
+    private void CheckStateLevels()
+    {
+        if (_playerAttack.Spell1Level != 0)
+        {
+            if (_upgradeButtons[_playerAttack.Spell1Level].GetComponent<Image>().color != _upgradedColor)
+            {
+                _upgradeButtons[_playerAttack.Spell1Level].GetComponent<Image>().color = _upgradedColor;
+            }
+        }
+        
+        if(_playerAttack.Spell2Level != 0)
+        {
+            if (_upgradeButtons[_playerAttack.Spell2Level + 2].GetComponent<Image>().color != _upgradedColor)
+            {
+                _upgradeButtons[_playerAttack.Spell2Level + 2].GetComponent<Image>().color = _upgradedColor;
+            }
+        }
+        
+        if (_playerAttack.Spell3Level != 0)
+        {
+            if (_upgradeButtons[_playerAttack.Spell3Level + 5].GetComponent<Image>().color != _upgradedColor)
+            {
+                _upgradeButtons[_playerAttack.Spell3Level + 5].GetComponent<Image>().color = _upgradedColor;
+            }
+        }
+        
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -47,7 +82,7 @@ public class UpgradeUIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        CheckStateLevels();
     }
 
     IEnumerator OpenUpgradePanel()
