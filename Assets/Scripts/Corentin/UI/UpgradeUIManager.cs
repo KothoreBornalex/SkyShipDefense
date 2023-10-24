@@ -24,13 +24,11 @@ public class UpgradeUIManager : MonoBehaviour
         if( _isOpen)
         {
             _isOpen = false;
-            Debug.Log("Close");
             StartCoroutine(CloseUpgradePanel());
         }
         else
         {
             _isOpen = true;
-            Debug.Log("Open");
             StartCoroutine(OpenUpgradePanel());
         }
     }

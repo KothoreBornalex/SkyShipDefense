@@ -25,6 +25,11 @@ public class playerAttack : MonoBehaviour
 
 
     // Methods
+    public void ChangeAttackIndex(int index)
+    {
+        _spellIndex = index;
+    }
+
     private void Attack()
     {
         RaycastHit hit;
