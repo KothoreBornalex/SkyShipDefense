@@ -18,10 +18,16 @@ public class SO_AI_SpawnList : ScriptableObject
         public List<GameObject> list = new List<GameObject>();
     }
 
+    [Header("Spawns Data")]
+    [SerializeField, Range(0, 100)] private int _maxSpawnCountPerFaction;
+    [SerializeField, Range(0, 10)] private int _baseSpawnCount = 4;
+
     [Header("Factions List")]
     [SerializeField] private List<FactionList> _factionsList;
 
-    public List<FactionList> FactionsList { get => _factionsList; set => _factionsList = value; }
+    public List<FactionList> FactionsList { get => _factionsList;}
+    public int MaxSpawnCountPerFaction { get => _maxSpawnCountPerFaction;}
+    public int BaseSpawnCount { get => _baseSpawnCount;}
 
 
 

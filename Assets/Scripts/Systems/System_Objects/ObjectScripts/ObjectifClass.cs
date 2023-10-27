@@ -18,6 +18,7 @@ public class ObjectifClass : MonoBehaviour, IObjects
         {
             Instantiate<GameObject>(effect.Prefab_Effect, effect.SpawnPoint_Effect);
         }
+
     }
 
 

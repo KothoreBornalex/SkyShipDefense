@@ -37,11 +37,14 @@ public class AI_Class : MonoBehaviour, IStatistics
     [SerializeField, Expandable] private AI_Data _ai_Data;
     [SerializeField] private bool _setChase;
     private int _targetID;
+    private Rigidbody _rigidbody;
+
 
     [SerializeField] private WeaponsScriptableObject _weaponsList;
     private List<Statistics> _aiStatistics = new List<Statistics>();
 
     [Header("Pathfinding Fields")]
+    private AIPath _aiPath;
     private AIDestinationSetter _destination;
     private Seeker _seeker;
 
@@ -63,14 +66,16 @@ public class AI_Class : MonoBehaviour, IStatistics
         _seeker = GetComponent<Seeker>();
         _destination = GetComponent<AIDestinationSetter>();
         _currentWeaponIndex = GetWeaponIndex(_unitType);
+        _rigidbody = GetComponent<Rigidbody>();
 
         InitializeStats();
+        FreezPhysics();
+
     }
 
 
     private void Update()
     {
-
         HandleChase();
 
         /*
@@ -139,7 +144,15 @@ public class AI_Class : MonoBehaviour, IStatistics
 
     #endregion
 
+    public void FreezPhysics()
+    {
+        _rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+    }
 
+    public void UnFreezPhysics()
+    {
+        _rigidbody.constraints = RigidbodyConstraints.None;
+    }
 
     public void Death()
     {

@@ -47,11 +47,10 @@ public class AISpawner_Manager : MonoBehaviour
     #endregion
 
 
-    [SerializeField, Range(0, 100)] private int spawnCount;
     private float _timer;
 
     [Expandable]
-    [SerializeField] private SO_AI_SpawnList _spawnListData;
+    [SerializeField] private SO_AI_SpawnList _spawnData;
     private List<PoolList> _factionPoolsList = new List<PoolList>();
 
 
@@ -63,7 +62,7 @@ public class AISpawner_Manager : MonoBehaviour
 
     private void Update()
     {
-        
+        /*
         _timer += Time.deltaTime;
 
         if(_timer >= 5.0f)
@@ -76,7 +75,8 @@ public class AISpawner_Manager : MonoBehaviour
             }
             _timer = 0;
         }
-        
+        */
+
     }
 
 
@@ -114,7 +114,7 @@ public class AISpawner_Manager : MonoBehaviour
     #region Initialization Functions
     public void StartPoolsInitialization()
     {
-        for(int i = 0; i < _spawnListData.FactionsList.Count; i++)
+        for(int i = 0; i < _spawnData.FactionsList.Count; i++)
         {
             Debug.Log("Start itération I = " + i);
 
@@ -123,7 +123,7 @@ public class AISpawner_Manager : MonoBehaviour
 
             _factionPoolsList.Add(newPoolList);
 
-            for(int x = 0; x < _spawnListData.FactionsList[i].list.Count; x++)
+            for(int x = 0; x < _spawnData.FactionsList[i].list.Count; x++)
             {
                 Debug.Log("iteration I = " + i + " itération X = " + x);
 
@@ -144,7 +144,7 @@ public class AISpawner_Manager : MonoBehaviour
         objectPool = new ObjectPool<PooledObject>(() =>
         {
             Debug.Log("Just Intantiate Unit");
-            PooledObject pooledObject = Instantiate(_spawnListData.FactionsList[factionIndex].list[soldierIndex]).GetComponent<PooledObject>();
+            PooledObject pooledObject = Instantiate(_spawnData.FactionsList[factionIndex].list[soldierIndex]).GetComponent<PooledObject>();
             pooledObject.InitalizedAction(UnSpawn, factionIndex, soldierIndex);
 
             return pooledObject;
@@ -159,7 +159,7 @@ public class AISpawner_Manager : MonoBehaviour
         }, aiObject =>
         {
             Destroy(aiObject.gameObject);
-        }, false, spawnCount, spawnCount * 2);
+        }, false, _spawnData.MaxSpawnCountPerFaction, _spawnData.MaxSpawnCountPerFaction * 2);
 
         
         return objectPool;
@@ -167,16 +167,16 @@ public class AISpawner_Manager : MonoBehaviour
 
     public void StartPoolUnitInitialization()
     {
-        for (int i = 0; i < _spawnListData.FactionsList.Count; i++)
+        for (int i = 0; i < _spawnData.FactionsList.Count; i++)
         {
-            for (int x = 0; x < _spawnListData.FactionsList[i].list.Count; x++)
+            for (int x = 0; x < _spawnData.FactionsList[i].list.Count; x++)
             {
                 FactionsEnum currentFactionEnum = (FactionsEnum)i;
                 SoldiersEnum currentSoldierEnum = (SoldiersEnum)x;
 
                 List<PooledObject> initializedObjectsList = new List<PooledObject>();
 
-                for (int y = 0; y < spawnCount; y++)
+                for (int y = 0; y < _spawnData.MaxSpawnCountPerFaction; y++)
                 {
                     initializedObjectsList.Add(InstantiatePoolUnit(currentFactionEnum, currentSoldierEnum));
                 }
