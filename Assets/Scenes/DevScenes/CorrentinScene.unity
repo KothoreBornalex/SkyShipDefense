@@ -597,7 +597,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 26dc731960a88b4448f17ec9198e81a5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -676,7 +676,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1441241023067885727, guid: 218aefb149406df4980eaf577452653c, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 48
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1441241023067885727, guid: 218aefb149406df4980eaf577452653c, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2111757938006004331, guid: 218aefb149406df4980eaf577452653c, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -704,7 +708,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4564532038190181214, guid: 218aefb149406df4980eaf577452653c, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 124
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4564532038190181214, guid: 218aefb149406df4980eaf577452653c, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5669866548566931702, guid: 218aefb149406df4980eaf577452653c, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
