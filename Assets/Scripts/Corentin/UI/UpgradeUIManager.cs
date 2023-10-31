@@ -30,6 +30,8 @@ public class UpgradeUIManager : MonoBehaviour
 
     [SerializeField] private playerAttack _playerAttack;
 
+    [Header("SkipButton")]
+    [SerializeField] private GameObject _skipButton;
 
     // Properties
 
@@ -82,8 +84,18 @@ public class UpgradeUIManager : MonoBehaviour
 
                 //_upgradeButtons[_playerAttack.Spell3Level + 5].GetComponentInChildren<Image>().color = _upgradedColor;
             }
-        }
-        
+        }   
+    }
+
+    private void UpdateSkipButton()
+    {
+        //  if(GameManager.instance.CurrentGameState == GameManager.GameState.PostWave)
+        //  {
+        //      _skipButton.SetActive(true);
+        //  }else
+        //  {
+        //      _skipButton.SetActive(false);
+        //  }
     }
 
     // Start is called before the first frame update
@@ -96,6 +108,8 @@ public class UpgradeUIManager : MonoBehaviour
     void Update()
     {
         CheckStateLevels();
+
+        UpdateSkipButton();
     }
 
     IEnumerator OpenUpgradePanel()
