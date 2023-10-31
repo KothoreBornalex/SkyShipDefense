@@ -8,7 +8,7 @@ public class playerAttack : MonoBehaviour
 {
     // Fields
 
-    [SerializeField] private LayerMask _ennemyLayerMask;
+    [SerializeField] private LayerMask _damageableLayerMask;
 
     [SerializeField] private GameObject _spell1Prefab;
     [SerializeField] private GameObject _spell2Prefab;
@@ -92,19 +92,19 @@ public class playerAttack : MonoBehaviour
     private void UseSpell1(Vector3 attackOrigin, int damageValue, float radius)     // Cast Faible dégats de zone
     {
         GameObject att = Instantiate(_spell1Prefab, attackOrigin, Quaternion.identity);
-        Collider[] hitCollider = Physics.OverlapSphere(transform.position, radius, _ennemyLayerMask);
+        Collider[] hitCollider = Physics.OverlapSphere(transform.position, radius, _damageableLayerMask);
         DamageSpell(hitCollider, damageValue);
     }
     private void UseSpell2(Vector3 attackOrigin, int damageValue, float radius)     // Cast Fort dégats précis
     {
         GameObject att = Instantiate(_spell2Prefab, attackOrigin, Quaternion.identity);
-        Collider[] hitCollider = Physics.OverlapSphere(transform.position, radius, _ennemyLayerMask);
+        Collider[] hitCollider = Physics.OverlapSphere(transform.position, radius, _damageableLayerMask);
         DamageSpell(hitCollider, damageValue);
     }
     private void UseSpell3(Vector3 attackOrigin, int slowValue, float radius)       // Cast Freeze
     {
         GameObject att = Instantiate(_spell3Prefab, attackOrigin, Quaternion.identity);
-        Collider[] hitCollider = Physics.OverlapSphere(transform.position, radius, _ennemyLayerMask);
+        Collider[] hitCollider = Physics.OverlapSphere(transform.position, radius, _damageableLayerMask);
         SlowSpell(hitCollider, slowValue);
     }
 
