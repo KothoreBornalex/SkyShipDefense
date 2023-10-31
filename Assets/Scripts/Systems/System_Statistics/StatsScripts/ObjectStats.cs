@@ -5,6 +5,7 @@ using static IStatistics;
 using static IObjects;
 using NaughtyAttributes;
 using UnityEngine.UI;
+using Unity.VisualScripting;
 
 public class ObjectStats : MonoBehaviour, IStatistics
 {
@@ -15,8 +16,9 @@ public class ObjectStats : MonoBehaviour, IStatistics
 
 
     [Header("Objectif UI")]
+    [SerializeField] private Color _hitColor;
     [SerializeField] private Slider _lifeSlider;
-    private float _targetValue;
+    [SerializeField] private Image _sliderBackGround;
 
     [Header("Objectif Stats")]
     private IObjects objectScript;
@@ -36,6 +38,15 @@ public class ObjectStats : MonoBehaviour, IStatistics
     private void Start()
     {
         objectScript = GetComponent<IObjects>();
+    }
+
+    private void Update()
+    {
+        if(_lifeSlider != null && _sliderBackGround != null)
+        {
+            _lifeSlider.value = Mathf.Lerp(_lifeSlider.value, objectHealth._statCurrentValue, Time.deltaTime * 9.0f);
+            _sliderBackGround.color = Vector4.Lerp(_sliderBackGround.color, Color.white, Time.deltaTime * 6.0f);
+        }
     }
 
     public void InitializeStats()
@@ -61,6 +72,11 @@ public class ObjectStats : MonoBehaviour, IStatistics
             objectHealth._statCurrentValue -= decreasingValue;
             objectHealth._statCurrentValue = Mathf.Clamp(objectHealth._statCurrentValue, 0, objectHealth._statMaxValue);
 
+            //Changing Slider Color:
+            if (_sliderBackGround != null)
+            {
+                _sliderBackGround.color = _hitColor;
+            }
 
             // For Actualizing the object state.
             if (objectHealth._statCurrentValue <= 85 && objectHealth._statCurrentValue >= 50)
