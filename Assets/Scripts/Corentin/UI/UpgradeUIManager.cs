@@ -6,6 +6,10 @@ using UnityEngine.UI;
 public class UpgradeUIManager : MonoBehaviour
 {
     // Fields
+    [Header("Icons")]
+    [SerializeField] private RectTransform _openCloseIcon;
+
+    [Header("Panel and button slide")]
     [SerializeField] private RectTransform _upgradeSkillsPanel;
 
     [SerializeField] private RectTransform _openPosition;
@@ -20,6 +24,7 @@ public class UpgradeUIManager : MonoBehaviour
 
     [SerializeField] private float _slideSpeed;
 
+    [Header("Upgrade")]
     [SerializeField] private Button[] _upgradeButtons;
     [SerializeField] private Color _upgradedColor;
 
@@ -36,11 +41,13 @@ public class UpgradeUIManager : MonoBehaviour
         if( _isOpen)
         {
             _isOpen = false;
+            StartCoroutine(PanelIconCloseRotation());
             StartCoroutine(CloseUpgradePanel());
         }
         else
         {
             _isOpen = true;
+            StartCoroutine(PanelIconOpenRotation());
             StartCoroutine(OpenUpgradePanel());
         }
     }
@@ -122,6 +129,40 @@ public class UpgradeUIManager : MonoBehaviour
             _upgradeSkillsPanel.position = positionTemp;
 
             _upgradesPack.position = upPositionTemp;
+
+            yield return null;
+        }
+
+        yield return null;
+    }
+
+    IEnumerator PanelIconOpenRotation()
+    {
+        Vector3 openRotation = _openCloseIcon.rotation.eulerAngles;
+
+        Debug.Log("je commence a tourner");
+        while (openRotation.z != 0f && _isOpen)
+        {
+            Debug.Log(openRotation.z);
+            Debug.Log("je tourne");
+            openRotation.z = Mathf.Lerp(_openCloseIcon.rotation.eulerAngles.z, 0f, Time.deltaTime * _slideSpeed * 2f);
+
+            _openCloseIcon.rotation = Quaternion.Euler(openRotation);
+
+            yield return null;
+        }
+
+        yield return null;
+    }
+    IEnumerator PanelIconCloseRotation()
+    {
+        Vector3 closeRotation = _openCloseIcon.rotation.eulerAngles;
+
+        while (closeRotation.z != 180f && !_isOpen)
+        {
+            closeRotation.z = Mathf.Lerp(_openCloseIcon.rotation.eulerAngles.z, 180f, Time.deltaTime * _slideSpeed * 2f);
+
+            _openCloseIcon.rotation = Quaternion.Euler(closeRotation);
 
             yield return null;
         }
