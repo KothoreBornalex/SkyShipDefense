@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static IStatistics;
 
 public class playerAttack : MonoBehaviour
 {
@@ -68,16 +69,19 @@ public class playerAttack : MonoBehaviour
 
             switch (_spellIndex)
             {
-                case 1:
+                case 1:     // Si Faible dégats de zone
                     UseSpell1(go, _playerAttacksData.Spell1DamageStats[_spell1Level], _playerAttacksData.Spell1RadiusStats[_spell1Level]);
                     break;
-                case 2:
+
+                case 2:     // Si Fort dégats précis
                     UseSpell2(go, _playerAttacksData.Spell2DamageStats[_spell2Level], _playerAttacksData.Spell2RadiusStats[_spell2Level]);
                     break;
-                case 3:
+
+                case 3:     // Si Slow
                     UseSpell3(go, _playerAttacksData.Spell3SlowStats[_spell3Level], _playerAttacksData.Spell3RadiusStats[_spell3Level]);
                     break;
-                default:
+
+                default:        // Si aucune attaque
                     Debug.LogWarning("Erreur ! Aucune attaque reconnue !");
                     break;
             }
@@ -85,42 +89,43 @@ public class playerAttack : MonoBehaviour
         }
     }
 
-    private void UseSpell1(Vector3 attackOrigin, int damageValue, float radius)     // Faible dégats de zone
+    private void UseSpell1(Vector3 attackOrigin, int damageValue, float radius)     // Cast Faible dégats de zone
     {
         GameObject att = Instantiate(_spell1Prefab, attackOrigin, Quaternion.identity);
         Collider[] hitCollider = Physics.OverlapSphere(transform.position, radius, _ennemyLayerMask);
         DamageSpell(hitCollider, damageValue);
     }
-    private void UseSpell2(Vector3 attackOrigin, int damageValue, float radius)     // Fort dégats précis
+    private void UseSpell2(Vector3 attackOrigin, int damageValue, float radius)     // Cast Fort dégats précis
     {
         GameObject att = Instantiate(_spell2Prefab, attackOrigin, Quaternion.identity);
         Collider[] hitCollider = Physics.OverlapSphere(transform.position, radius, _ennemyLayerMask);
         DamageSpell(hitCollider, damageValue);
     }
-    private void UseSpell3(Vector3 attackOrigin, int slowValue, float radius)       // Freeze
+    private void UseSpell3(Vector3 attackOrigin, int slowValue, float radius)       // Cast Freeze
     {
         GameObject att = Instantiate(_spell3Prefab, attackOrigin, Quaternion.identity);
         Collider[] hitCollider = Physics.OverlapSphere(transform.position, radius, _ennemyLayerMask);
         SlowSpell(hitCollider, slowValue);
     }
 
-    private void DamageSpell(Collider[] colliders, int damageValue)
+    private void DamageSpell(Collider[] colliders, int damageValue)     // Inflige dégats
     {
         foreach (Collider collider in colliders)
         {
             if (collider.CompareTag("Ennemy"))
             {
-                // !!!!! Retirer la vie des ennemis
+                collider.gameObject.GetComponent<IStatistics>().DecreaseStat(StatName.Health, damageValue);
             }
         }
     }
-    private void SlowSpell(Collider[] colliders, int slowValue)
+    private void SlowSpell(Collider[] colliders, int slowValue)     // Slow ennemis
     {
         foreach(Collider collider in colliders)
         {
             if (collider.CompareTag("Ennemy"))
             {
-                // !!!!! Slow ennemies
+                // !!!!! Slow ennemis
+                //collider.gameObject.GetComponent<IStatistics>().DecreaseStat();
             }
         }
     }
