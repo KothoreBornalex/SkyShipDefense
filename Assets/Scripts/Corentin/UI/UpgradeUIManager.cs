@@ -59,6 +59,8 @@ public class UpgradeUIManager : MonoBehaviour
             if (_upgradeButtons[_playerAttack.Spell1Level - 1].GetComponent<Image>().color != _upgradedColor)
             {
                 _upgradeButtons[_playerAttack.Spell1Level - 1].GetComponent<Image>().color = _upgradedColor;
+
+                //_upgradeButtons[_playerAttack.Spell1Level - 1].GetComponentInChildren<Image>().color = _upgradedColor;
             }
         }
         
@@ -67,6 +69,8 @@ public class UpgradeUIManager : MonoBehaviour
             if (_upgradeButtons[_playerAttack.Spell2Level + 2].GetComponent<Image>().color != _upgradedColor)
             {
                 _upgradeButtons[_playerAttack.Spell2Level + 2].GetComponent<Image>().color = _upgradedColor;
+
+                //_upgradeButtons[_playerAttack.Spell2Level + 2].GetComponentInChildren<Image>().color= _upgradedColor;
             }
         }
         
@@ -75,6 +79,8 @@ public class UpgradeUIManager : MonoBehaviour
             if (_upgradeButtons[_playerAttack.Spell3Level + 5].GetComponent<Image>().color != _upgradedColor)
             {
                 _upgradeButtons[_playerAttack.Spell3Level + 5].GetComponent<Image>().color = _upgradedColor;
+
+                //_upgradeButtons[_playerAttack.Spell3Level + 5].GetComponentInChildren<Image>().color = _upgradedColor;
             }
         }
         
