@@ -4,6 +4,7 @@ using UnityEngine;
 using static IStatistics;
 using static IObjects;
 using NaughtyAttributes;
+using UnityEngine.UI;
 
 public class ObjectStats : MonoBehaviour, IStatistics
 {
@@ -13,8 +14,11 @@ public class ObjectStats : MonoBehaviour, IStatistics
     [Button("Reset")] void LaunchReset() => Reset();
 
 
+    [Header("Objectif UI")]
+    [SerializeField] private Slider _lifeSlider;
+    private float _targetValue;
 
-    [Header("Object Stats")]
+    [Header("Objectif Stats")]
     private IObjects objectScript;
     [SerializeField] private Statistics objectHealth;
 

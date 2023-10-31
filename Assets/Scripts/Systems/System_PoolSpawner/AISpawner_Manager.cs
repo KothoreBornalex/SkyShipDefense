@@ -16,14 +16,14 @@ public class AISpawner_Manager : MonoBehaviour
     public class PoolClass
     {
         public SoldiersEnum _poolType;
-        public ObjectPool<PooledObject> _pool;
+        [SerializeField] public ObjectPool<PooledObject> _pool;
     }
 
     [System.Serializable]   
     public class PoolList
     {
         public FactionsEnum _poolsFaction;
-        public List<PoolClass> _poolsList = new List<PoolClass>();
+        [SerializeField] public List<PoolClass> _poolsList = new List<PoolClass>();
     }
     #endregion
 
@@ -51,7 +51,7 @@ public class AISpawner_Manager : MonoBehaviour
 
     [Expandable]
     [SerializeField] private SO_AI_SpawnList _spawnData;
-    private List<PoolList> _factionPoolsList = new List<PoolList>();
+    [SerializeField] private List<PoolList> _factionPoolsList = new List<PoolList>();
 
 
 

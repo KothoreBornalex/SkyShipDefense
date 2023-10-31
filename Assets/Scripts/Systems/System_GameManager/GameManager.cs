@@ -41,7 +41,6 @@ public class GameManager : MonoBehaviour
     #endregion
 
 
-
     #region Spawn Fields
     [Header("Spawn Waves Fields")]
     [SerializeField, Expandable] private SO_AI_SpawnList _spawnData;
@@ -68,7 +67,6 @@ public class GameManager : MonoBehaviour
     {
         UpdateGameStates();
     }
-
 
     private void SpawnUnits()
     {
@@ -152,6 +150,7 @@ public class GameManager : MonoBehaviour
             if (_currentSpawnerTimer > _timeBetweenWave)
             {
                 AISpawner_Manager.instance.Spawn(FactionsEnum.Elf, SoldiersEnum.Larbin_A, _spawnPoints[Random.Range(0, _spawnPoints.Length)].position);
+
                 _unitsSpawnedThisRound++;
                 _currentSpawnerTimer = 0;
             }
