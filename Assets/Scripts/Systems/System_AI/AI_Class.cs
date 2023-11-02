@@ -1,8 +1,8 @@
 using NaughtyAttributes;
-using Pathfinding;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using static IStatistics;
 
 public class AI_Class : MonoBehaviour, IStatistics
@@ -36,7 +36,7 @@ public class AI_Class : MonoBehaviour, IStatistics
     [SerializeField] private MeshRenderer _meshRenderer;
     [SerializeField, Expandable] private AI_Data _ai_Data;
     [SerializeField] private bool _setChase;
-    private int _targetID;
+    private int _objectifID;
     private Rigidbody _rigidbody;
 
 
@@ -44,9 +44,7 @@ public class AI_Class : MonoBehaviour, IStatistics
     private List<Statistics> _aiStatistics = new List<Statistics>();
 
     [Header("Pathfinding Fields")]
-    private AIPath _aiPath;
-    private AIDestinationSetter _destination;
-    private Seeker _seeker;
+    private NavMeshAgent _navMeshAgent;
 
     [Header("Patrols Fields")]
     [SerializeField] private Transform[] patrolWayPoints;
@@ -59,18 +57,16 @@ public class AI_Class : MonoBehaviour, IStatistics
     [SerializeField] private Transform _bulletSpawnPoint;
     private float _attackTimer;
 
-    private void Start()
+    private void Awake()
     {
-        _targetID = Random.Range(0, GameManager.instance.Objectifs.Length);
-
-        _seeker = GetComponent<Seeker>();
-        _destination = GetComponent<AIDestinationSetter>();
+        _navMeshAgent = GetComponent<NavMeshAgent>();
         _currentWeaponIndex = GetWeaponIndex(_unitType);
         _rigidbody = GetComponent<Rigidbody>();
+    }
 
-        InitializeStats();
-        FreezPhysics();
-
+    private void Start()
+    {
+        _objectifID = Random.Range(0, GameManager.instance.Objectifs.Length);
     }
 
 
@@ -97,23 +93,22 @@ public class AI_Class : MonoBehaviour, IStatistics
         
         if (!_setChase)
         {
-            _destination.target = GameManager.instance.Objectifs[_targetID];
+            _navMeshAgent.SetDestination(GameManager.instance.Objectifs[_objectifID].transform.position);
             _setChase = true;
         }
 
-        if (Vector3.Distance(transform.position, GameManager.instance.Objectifs[_targetID].position) > _ai_Data.AttackRange && _destination.target != GameManager.instance.Objectifs[_targetID])
+        if (Vector3.Distance(transform.position, GameManager.instance.Objectifs[_objectifID].transform.position) > _ai_Data.AttackRange && !_navMeshAgent.hasPath)
         {
-            _destination.target = GameManager.instance.Objectifs[_targetID];
-        }
-        else if(Vector3.Distance(transform.position, GameManager.instance.Objectifs[_targetID].position) <= _ai_Data.AttackRange)
-        {
-            _destination.target = null;
-
-            _attackTimer += Time.deltaTime;
-            //HandleAIAttack();
-            Debug.Log("Attack !!");
+            _navMeshAgent.SetDestination(GameManager.instance.Objectifs[_objectifID].transform.position);
         }
         
+        if(Vector3.Distance(transform.position, GameManager.instance.Objectifs[_objectifID].transform.position) <= _ai_Data.AttackRange)
+        {
+            _navMeshAgent.isStopped = true;
+
+            _attackTimer += Time.deltaTime;
+            HandleAIAttack();
+        }
     }
 
     public void HandlePatrol()
@@ -123,30 +118,42 @@ public class AI_Class : MonoBehaviour, IStatistics
             return;
         }
 
-        if (_destination.target == null)
+        if (!_navMeshAgent.hasPath)
         {
-            _destination.target = patrolWayPoints[currentPatrolPoint].transform;
+            _navMeshAgent.SetDestination(patrolWayPoints[currentPatrolPoint].transform.position);
         }
 
 
         if (Mathf.Round(transform.position.x) == Mathf.Round(patrolWayPoints[currentPatrolPoint].position.x) && Mathf.Round(transform.position.y) == Mathf.Round(patrolWayPoints[currentPatrolPoint].position.y) && currentPatrolPoint != patrolWayPoints.Length)
         {
             currentPatrolPoint++;
-            _destination.target = patrolWayPoints[currentPatrolPoint].transform;
+            _navMeshAgent.SetDestination(patrolWayPoints[currentPatrolPoint].transform.position);
 
         }
         else if(patrolWayPoints.Length == currentPatrolPoint)
         {
             currentPatrolPoint = 0;
-            _destination.target = patrolWayPoints[currentPatrolPoint].transform;
+            _navMeshAgent.SetDestination(patrolWayPoints[currentPatrolPoint].transform.position);
         }
     }
 
     #endregion
 
+
+    public void InitializedAI()
+    {
+        Debug.Log("Initialized AI Started");
+        InitializeStats();
+        FreezPhysics();
+
+        _navMeshAgent.enabled = false;
+        _navMeshAgent.enabled = true;
+
+    }
+
     public void FreezPhysics()
     {
-        _rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+        _rigidbody.constraints = RigidbodyConstraints.FreezeAll;
     }
 
     public void UnFreezPhysics()
@@ -165,12 +172,13 @@ public class AI_Class : MonoBehaviour, IStatistics
     #region Global Attacks Functions
     public void HandleAIAttack()
     {
+        Debug.Log("AI Attack !!");
 
         switch (_unitType)
         {
             case SoldiersEnum.Larbin_A:
                 if (_attackTimer >= _weaponsList.WeaponsList[_currentWeaponIndex].weaponCoolDown)
-                    HandleKatanaAttack();
+                    LarbinA_Attack();
                 break;
 
 
@@ -189,11 +197,11 @@ public class AI_Class : MonoBehaviour, IStatistics
     }
 
 
-    public void HandleKatanaAttack()
+    public void LarbinA_Attack()
     {
         Debug.Log("Katana Attack !!");
         //AudioManager.instance.PlayOneShot_GlobalSound(FMODEvents.instance.Weapons_KatanaSlash);
-        //PlayerStateMachine.instance.DecreaseStat(StatName.Health, _weaponsList.WeaponsList[_currentWeaponIndex].weaonDamage);
+        GameManager.instance.Objectifs[_objectifID].DecreaseStat(StatName.Health, _weaponsList.WeaponsList[_currentWeaponIndex].weaonDamage);
         _attackTimer = 0;
     }
 

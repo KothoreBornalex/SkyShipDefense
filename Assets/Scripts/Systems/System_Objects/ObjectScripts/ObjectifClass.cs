@@ -46,7 +46,7 @@ public class ObjectifClass : MonoBehaviour, IObjects
             ObjectState = ObjectStates.HighDamaged;
         }
 
-        if (newState == ObjectStates.Destroyed)
+        if (newState == ObjectStates.Destroyed && ObjectState != ObjectStates.Destroyed)
         {
             ObjectState = ObjectStates.Destroyed;
             Destroyed();

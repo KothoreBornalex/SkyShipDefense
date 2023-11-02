@@ -34,9 +34,10 @@ public class GameManager : MonoBehaviour
     }
 
     [SerializeField] private GameState _currentGameState;
-    [SerializeField] private Transform[] _objectifs;
+    [SerializeField] private ObjectifStats[] _objectifs;
 
-    public Transform[] Objectifs { get => _objectifs; set => _objectifs = value; }
+    public ObjectifStats[] Objectifs { get => _objectifs; set => _objectifs = value; }
+
 
     #endregion
 
@@ -70,9 +71,9 @@ public class GameManager : MonoBehaviour
 
     private void SpawnUnits()
     {
-        foreach(Transform t in _objectifs)
+        foreach(ObjectifStats objectif in _objectifs)
         {
-            AISpawner_Manager.instance.Spawn(FactionsEnum.Elf, SoldiersEnum.Larbin_A, t.position);
+            AISpawner_Manager.instance.Spawn(FactionsEnum.Elf, SoldiersEnum.Larbin_A, objectif.transform.position);
         }
     }
 
