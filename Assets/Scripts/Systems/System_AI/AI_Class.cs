@@ -32,13 +32,16 @@ public class AI_Class : MonoBehaviour, IStatistics
     }
 
     [Header("Global AI Fields")]
+    [SerializeField] private bool _isAlive;
     [SerializeField] private SoldiersEnum _unitType;
-    [SerializeField] private MeshRenderer _meshRenderer;
     [SerializeField, Expandable] private AI_Data _ai_Data;
     [SerializeField] private bool _setChase;
     private int _objectifID;
     private Rigidbody _rigidbody;
-
+    private CapsuleCollider _capsuleCollider;
+    private SkinnedMeshRenderer _skinnedMeshRenderer;
+    private Material _material;
+    private Animator _animator;
 
     [SerializeField] private WeaponsScriptableObject _weaponsList;
     private List<Statistics> _aiStatistics = new List<Statistics>();
@@ -57,11 +60,23 @@ public class AI_Class : MonoBehaviour, IStatistics
     [SerializeField] private Transform _bulletSpawnPoint;
     private float _attackTimer;
 
+
+    //Animations Hash
+    private int hash_Reset = Animator.StringToHash("Reset");
+    private int hash_Attack = Animator.StringToHash("Attack");
+    private int hash_GetHit = Animator.StringToHash("GetHit");
+    private int hash_isDead = Animator.StringToHash("isDead");
+    private int hash_isWalking = Animator.StringToHash("isWalking");
+
     private void Awake()
     {
         _navMeshAgent = GetComponent<NavMeshAgent>();
         _currentWeaponIndex = GetWeaponIndex(_unitType);
         _rigidbody = GetComponent<Rigidbody>();
+        _capsuleCollider = GetComponent<CapsuleCollider>();
+        _skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
+        _material = _skinnedMeshRenderer.material;
+        _animator = GetComponentInChildren<Animator>();
     }
 
     private void Start()
@@ -72,30 +87,85 @@ public class AI_Class : MonoBehaviour, IStatistics
 
     private void Update()
     {
-        HandleChase();
 
-        /*
-        if (!_isAlerted)
+        if (_isAlive)
         {
-            HandlePatrol();
+            HandleChase();
+
+            if (_skinnedMeshRenderer.sharedMaterial.color != Color.white)
+            {
+                _material.color = Vector4.Lerp(_material.color, Color.white, Time.deltaTime * 3.0f);
+            }
         }
         else
         {
-            HandleChase();
+            if (_skinnedMeshRenderer.sharedMaterial.color != Color.black)
+            {
+                _material.color = Vector4.Lerp(_material.color, Color.black, Time.deltaTime * 3.0f);
+            }
         }
-        */
+
     }
+
+    #region Global AI Functions
+
+    public void InitializedAI()
+    {
+        Debug.Log("Initialized AI Started");
+        _isAlive = true;
+
+        InitializeStats();
+        FreezPhysics();
+
+        _navMeshAgent.enabled = false;
+        _navMeshAgent.enabled = true;
+
+
+        _animator.SetBool(hash_isDead, false);
+        _animator.SetBool(hash_isWalking, false);
+
+        _capsuleCollider.enabled = true;
+
+        _material.color = Color.white;
+    }
+
+    public void FreezPhysics()
+    {
+        _rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+    }
+
+    public void UnFreezPhysics()
+    {
+        _rigidbody.constraints = RigidbodyConstraints.None;
+    }
+
+    public void Death()
+    {
+        //Instantiate<GameObject>(_ai_Data.DeathObject, transform.position, Quaternion.identity);
+        _isAlive = false;
+        _animator.SetBool(hash_isDead, true);
+        _navMeshAgent.isStopped = true;
+        _navMeshAgent.ResetPath();
+
+        _capsuleCollider.enabled = false;
+
+        GameManager.instance.UnitsDeadThisRound++;
+    }
+
+    #endregion
 
 
     #region Patrol & Chases Functions
     public void HandleChase()
     {
-        
+        HandleObjectivesChoice();
+
         if (!_setChase)
         {
             _navMeshAgent.SetDestination(GameManager.instance.Objectifs[_objectifID].transform.position);
             _setChase = true;
         }
+
 
         if (Vector3.Distance(transform.position, GameManager.instance.Objectifs[_objectifID].transform.position) > _ai_Data.AttackRange && !_navMeshAgent.hasPath)
         {
@@ -104,10 +174,21 @@ public class AI_Class : MonoBehaviour, IStatistics
         
         if(Vector3.Distance(transform.position, GameManager.instance.Objectifs[_objectifID].transform.position) <= _ai_Data.AttackRange)
         {
+            if (_animator.GetBool(hash_isWalking))
+            {
+                _animator.SetBool(hash_isWalking, false);
+            }
+
             _navMeshAgent.isStopped = true;
+            _navMeshAgent.ResetPath();
 
             _attackTimer += Time.deltaTime;
             HandleAIAttack();
+        }
+        else if(!_navMeshAgent.hasPath)
+        {
+            _navMeshAgent.SetDestination(GameManager.instance.Objectifs[_objectifID].transform.position);
+            _animator.SetBool(hash_isWalking, true);
         }
     }
 
@@ -137,36 +218,20 @@ public class AI_Class : MonoBehaviour, IStatistics
         }
     }
 
+
+    public void HandleObjectivesChoice()
+    {
+        if (GameManager.instance.Objectifs[_objectifID].ObjectScript.GetObjectState() == IObjects.ObjectStates.Destroyed)
+        {
+            if (GameManager.instance.ObjectiveExist())
+            {
+                _objectifID = GameManager.instance.GetObjectif();
+            }
+        }
+    }
+
+    
     #endregion
-
-
-    public void InitializedAI()
-    {
-        Debug.Log("Initialized AI Started");
-        InitializeStats();
-        FreezPhysics();
-
-        _navMeshAgent.enabled = false;
-        _navMeshAgent.enabled = true;
-
-    }
-
-    public void FreezPhysics()
-    {
-        _rigidbody.constraints = RigidbodyConstraints.FreezeAll;
-    }
-
-    public void UnFreezPhysics()
-    {
-        _rigidbody.constraints = RigidbodyConstraints.None;
-    }
-
-    public void Death()
-    {
-        Instantiate<GameObject>(_ai_Data.DeathObject, transform.position, Quaternion.identity);
-        Destroy(gameObject);
-    }
-
 
 
     #region Global Attacks Functions
@@ -174,24 +239,28 @@ public class AI_Class : MonoBehaviour, IStatistics
     {
         Debug.Log("AI Attack !!");
 
-        switch (_unitType)
+        if (_attackTimer >= _weaponsList.WeaponsList[_currentWeaponIndex].weaponCoolDown)
         {
-            case SoldiersEnum.Larbin_A:
-                if (_attackTimer >= _weaponsList.WeaponsList[_currentWeaponIndex].weaponCoolDown)
-                    LarbinA_Attack();
-                break;
+            _animator.SetTrigger(hash_Attack);
+
+            switch (_unitType)
+            {
+                case SoldiersEnum.Larbin_A:
+                        LarbinA_Attack();
+                    break;
 
 
-            case SoldiersEnum.Larbin_B:
-                if (_attackTimer >= _weaponsList.WeaponsList[_currentWeaponIndex].weaponCoolDown)
-                    HandlePistolAttack();
-                break;
+                case SoldiersEnum.Larbin_B:
+                        HandlePistolAttack();
+                    break;
 
-            case SoldiersEnum.Larbin_C:
-                if (_attackTimer >= _weaponsList.WeaponsList[_currentWeaponIndex].weaponCoolDown)
-                    HandleFusilAttack();
-                break;
+                case SoldiersEnum.Larbin_C:
+                        HandleFusilAttack();
+                    break;
 
+            }
+
+            _attackTimer = 0;
         }
 
     }
@@ -202,7 +271,6 @@ public class AI_Class : MonoBehaviour, IStatistics
         Debug.Log("Katana Attack !!");
         //AudioManager.instance.PlayOneShot_GlobalSound(FMODEvents.instance.Weapons_KatanaSlash);
         GameManager.instance.Objectifs[_objectifID].DecreaseStat(StatName.Health, _weaponsList.WeaponsList[_currentWeaponIndex].weaonDamage);
-        _attackTimer = 0;
     }
 
 
@@ -222,7 +290,6 @@ public class AI_Class : MonoBehaviour, IStatistics
         //WeaponContactTrigger projectile = Instantiate<GameObject>(PlayerStateMachine.instance.WeaponsList.WeaponsList[currentWeapon].attackProjectile, transform.position, Quaternion.identity).GetComponent<WeaponContactTrigger>();
         //projectile.direction = direction;
         //projectile.TargetedFaction = Factions.Player;
-        _attackTimer = 0;
 
 
     }
@@ -243,8 +310,6 @@ public class AI_Class : MonoBehaviour, IStatistics
         //WeaponContactTrigger projectile = Instantiate<GameObject>(PlayerStateMachine.instance.WeaponsList.WeaponsList[currentWeapon].attackProjectile, transform.position, Quaternion.identity).GetComponent<WeaponContactTrigger>();
         //projectile.direction = direction;
         //projectile.TargetedFaction = Factions.Player;
-
-        _attackTimer = 0;
 
     }
 
@@ -299,10 +364,10 @@ public class AI_Class : MonoBehaviour, IStatistics
                 if (stats._statName == StatName.Health)
                 {
                     //AudioManager.instance.PlayOneShot_GlobalSound(FMODEvents.instance.Player_Hurt);
-                    //_aiSprite.color = Color.red;
+                    _material.color = Color.red;
+                    _animator.SetTrigger(hash_GetHit);
 
-
-                    if(stats._statCurrentValue <= 0)
+                    if (stats._statCurrentValue <= 0 && _isAlive)
                     {
                         Death();
                     }

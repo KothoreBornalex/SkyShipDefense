@@ -65,6 +65,12 @@ public interface IStatistics
 
     }
 
+
+    public float GetStat(StatName statName)
+    {
+        return 0.0f;
+    }
+
     public void SetStat(StatName statName, float statValue)
     {
 

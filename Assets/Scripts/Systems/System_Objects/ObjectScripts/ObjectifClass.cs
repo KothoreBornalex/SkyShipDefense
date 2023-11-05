@@ -53,5 +53,9 @@ public class ObjectifClass : MonoBehaviour, IObjects
         }
     }
 
+    public ObjectStates GetObjectState()
+    {
+        return ObjectState;
+    }
 
 }

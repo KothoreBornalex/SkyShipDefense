@@ -575,7 +575,7 @@ MonoBehaviour:
   _hitColor: {r: 1, g: 0.13791426, b: 0.07075471, a: 0}
   _lifeSlider: {fileID: 3755099}
   _sliderBackGround: {fileID: 1065594150}
-  objectHealth:
+  _objectifHealth:
     _statName: 0
     _statCurrentValue: 100
     _statMaxValue: 100
@@ -2724,7 +2724,7 @@ MonoBehaviour:
   _hitColor: {r: 1, g: 0.13791426, b: 0.07075471, a: 0}
   _lifeSlider: {fileID: 407951388}
   _sliderBackGround: {fileID: 1915489957}
-  objectHealth:
+  _objectifHealth:
     _statName: 0
     _statCurrentValue: 100
     _statMaxValue: 100
@@ -5010,7 +5010,7 @@ MonoBehaviour:
   _hitColor: {r: 1, g: 0.13791426, b: 0.07075471, a: 0}
   _lifeSlider: {fileID: 1642772896}
   _sliderBackGround: {fileID: 109412606}
-  objectHealth:
+  _objectifHealth:
     _statName: 0
     _statCurrentValue: 100
     _statMaxValue: 100

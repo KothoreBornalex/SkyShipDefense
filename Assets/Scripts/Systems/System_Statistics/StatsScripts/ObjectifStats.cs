@@ -22,17 +22,19 @@ public class ObjectifStats : MonoBehaviour, IStatistics
 
     [Header("Objectif Stats")]
     private IObjects objectScript;
-    [SerializeField] private Statistics objectHealth;
+    [SerializeField] private Statistics _objectifHealth;
 
+    public Statistics ObjectifHealth { get => _objectifHealth;}
+    public IObjects ObjectScript { get => objectScript;}
 
     private void Reset()
     {
         objectScript = GetComponent<IObjects>();
 
-        objectHealth = new Statistics();
-        objectHealth._statName = StatName.Health;
-        objectHealth._statMaxValue = 100;
-        objectHealth._statCurrentValue = 100;
+        _objectifHealth = new Statistics();
+        _objectifHealth._statName = StatName.Health;
+        _objectifHealth._statMaxValue = 100;
+        _objectifHealth._statCurrentValue = 100;
     }
 
     private void Start()
@@ -44,7 +46,7 @@ public class ObjectifStats : MonoBehaviour, IStatistics
     {
         if(_lifeSlider != null && _sliderBackGround != null)
         {
-            _lifeSlider.value = Mathf.Lerp(_lifeSlider.value, objectHealth._statCurrentValue, Time.deltaTime * 9.0f);
+            _lifeSlider.value = Mathf.Lerp(_lifeSlider.value, _objectifHealth._statCurrentValue, Time.deltaTime * 9.0f);
             _sliderBackGround.color = Vector4.Lerp(_sliderBackGround.color, Color.white, Time.deltaTime * 6.0f);
         }
     }
@@ -57,9 +59,9 @@ public class ObjectifStats : MonoBehaviour, IStatistics
 
     public void SetStat(StatName statName, float statValue)
     {
-        if(statName == objectHealth._statName)
+        if(statName == _objectifHealth._statName)
         {
-            objectHealth._statCurrentValue = statValue;
+            _objectifHealth._statCurrentValue = statValue;
         }
     }
 
@@ -67,10 +69,10 @@ public class ObjectifStats : MonoBehaviour, IStatistics
     {
         //Since I only have one stat in this script, I don't need to do a for each to find the right stat.
 
-        if (statName == objectHealth._statName)
+        if (statName == _objectifHealth._statName)
         {
-            objectHealth._statCurrentValue -= decreasingValue;
-            objectHealth._statCurrentValue = Mathf.Clamp(objectHealth._statCurrentValue, 0, objectHealth._statMaxValue);
+            _objectifHealth._statCurrentValue -= decreasingValue;
+            _objectifHealth._statCurrentValue = Mathf.Clamp(_objectifHealth._statCurrentValue, 0, _objectifHealth._statMaxValue);
 
             //Changing Slider Color:
             if (_sliderBackGround != null)
@@ -79,17 +81,17 @@ public class ObjectifStats : MonoBehaviour, IStatistics
             }
 
             // For Actualizing the object state.
-            if (objectHealth._statCurrentValue <= 85 && objectHealth._statCurrentValue >= 50)
+            if (_objectifHealth._statCurrentValue <= 85 && _objectifHealth._statCurrentValue >= 50)
             {
                 objectScript.SwitchState(ObjectStates.LittleDamaged);
             }
 
-            if (objectHealth._statCurrentValue <= 50 && objectHealth._statCurrentValue >= 1)
+            if (_objectifHealth._statCurrentValue <= 50 && _objectifHealth._statCurrentValue >= 1)
             {
                 objectScript.SwitchState(ObjectStates.HighDamaged);
             }
 
-            if (objectHealth._statCurrentValue < 1)
+            if (_objectifHealth._statCurrentValue < 1)
             {
                 objectScript.SwitchState(ObjectStates.Destroyed);
             }
@@ -102,23 +104,23 @@ public class ObjectifStats : MonoBehaviour, IStatistics
     {
         //Since I only have one stat in this script, I don't need to do a for each to find the right stat.
 
-        if (statName == objectHealth._statName)
+        if (statName == _objectifHealth._statName)
         {
-            objectHealth._statCurrentValue += increasingValue;
-            objectHealth._statCurrentValue = Mathf.Clamp(objectHealth._statCurrentValue, 0, objectHealth._statMaxValue);
+            _objectifHealth._statCurrentValue += increasingValue;
+            _objectifHealth._statCurrentValue = Mathf.Clamp(_objectifHealth._statCurrentValue, 0, _objectifHealth._statMaxValue);
 
 
-            if (objectHealth._statCurrentValue >= 85)
+            if (_objectifHealth._statCurrentValue >= 85)
             {
                 objectScript.SwitchState(ObjectStates.Perfect);
             }
 
-            if (objectHealth._statCurrentValue <= 85 && objectHealth._statCurrentValue >= 50)
+            if (_objectifHealth._statCurrentValue <= 85 && _objectifHealth._statCurrentValue >= 50)
             {
                 objectScript.SwitchState(ObjectStates.LittleDamaged);
             }
 
-            if (objectHealth._statCurrentValue <= 50 && objectHealth._statCurrentValue >= 1)
+            if (_objectifHealth._statCurrentValue <= 50 && _objectifHealth._statCurrentValue >= 1)
             {
                 objectScript.SwitchState(ObjectStates.HighDamaged);
             }
