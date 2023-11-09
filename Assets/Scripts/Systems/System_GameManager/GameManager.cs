@@ -12,7 +12,10 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if(GameManager.instance == null)
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 100;
+
+        if (GameManager.instance == null)
         {
             GameManager.instance = this;
         }
@@ -32,11 +35,15 @@ public class GameManager : MonoBehaviour
         PostWave,
         Paused
     }
-
+    [Header("Game State Fields")]
     [SerializeField] private GameState _currentGameState;
     [SerializeField] private ObjectifStats[] _objectifs;
 
     public ObjectifStats[] Objectifs { get => _objectifs; set => _objectifs = value; }
+
+    private bool _preWaveHasStarted;
+    private bool _inWaveHasStarted;
+    private bool _postWaveHasStarted;
 
 
     #endregion
@@ -55,7 +62,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Transform[] _spawnPoints;
     [SerializeField] private float _timeBetweenWave;
     private float _currentSpawnerTimer;
-    private bool _inWaveHasStarted;
 
     public int CurrentRound { get => _currentRound;}
     public int UnitsDeadThisRound { get => _unitsDeadThisRound; set => _unitsDeadThisRound = value; }
@@ -63,10 +69,6 @@ public class GameManager : MonoBehaviour
     #endregion
 
 
-    private void Start()
-    {
-
-    }
 
     private void Update()
     {
@@ -122,11 +124,12 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.InWave:
-                if (!_inWaveHasStarted) StartWave();
-                UpdateWave();
+                if (!_inWaveHasStarted) StartInWave();
+                UpdateInWave();
                 break;
 
             case GameState.PostWave:
+                if (!_postWaveHasStarted) StartPostWave();
                 UpdatePostWave();
                 break;
 
@@ -155,7 +158,7 @@ public class GameManager : MonoBehaviour
 
 
     #region InWave State
-    private void StartWave()
+    private void StartInWave()
     {
         if(_currentRound == 0)
         {
@@ -170,14 +173,14 @@ public class GameManager : MonoBehaviour
         _inWaveHasStarted = true;
     }
 
-    private void EndWave()
+    private void EndInWave()
     {
         _currentGameState = GameState.PostWave;
         _inWaveHasStarted = false;
         _unitsSpawnedThisRound = 0;
         _unitsDeadThisRound = 0;
     }
-    public void UpdateWave()
+    public void UpdateInWave()
     {
 
         if (_unitsSpawnedThisRound < _currentSpawnCount)
@@ -194,7 +197,7 @@ public class GameManager : MonoBehaviour
         }
         else if(_unitsDeadThisRound == _unitsSpawnedThisRound)
         {
-            EndWave();
+            EndInWave();
         }
 
     }
@@ -207,6 +210,14 @@ public class GameManager : MonoBehaviour
 
 
     #region PostWave State
+    private void StartPostWave()
+    {
+        MapManager.instance.IsTimeSpeeding = true;
+
+
+        _postWaveHasStarted = true;
+    }
+
     private void UpdatePostWave()
     {
         _postWaveTimer += Time.deltaTime;
@@ -231,6 +242,10 @@ public class GameManager : MonoBehaviour
     {
         _postWaveTimer = 0.0f;
         _currentGameState = GameState.PreWave;
+        MapManager.instance.IsTimeSpeeding = false;
+
+
+        _postWaveHasStarted = false;
     }
 
     #endregion
