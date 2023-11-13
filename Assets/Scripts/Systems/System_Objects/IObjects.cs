@@ -31,10 +31,6 @@ public interface IObjects
 
     }
 
-    public ObjectStates GetObjectState()
-    {
-        return ObjectStates.Perfect;
-    }
 
     
 

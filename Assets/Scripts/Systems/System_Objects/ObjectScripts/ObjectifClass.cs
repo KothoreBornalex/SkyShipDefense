@@ -10,17 +10,11 @@ public class ObjectifClass : MonoBehaviour, IObjects
     [SerializeField] private ObjectStates ObjectState;
 
     [SerializeField] private List<EffectEmission> Destroyed_effectEmissions = new List<EffectEmission>();
-    [SerializeField] private List<EffectEmission> Destroyed_secondaryEffectEmissions = new List<EffectEmission>();
 
     public void Destroyed()
     {
         //Instantiating all the destroyed effects.
         foreach(EffectEmission effect in Destroyed_effectEmissions)
-        {
-            Instantiate<GameObject>(effect.Prefab_Effect, effect.SpawnPoint_Effect);
-        }
-
-        foreach (EffectEmission effect in Destroyed_secondaryEffectEmissions)
         {
             Instantiate<GameObject>(effect.Prefab_Effect, effect.SpawnPoint_Effect);
         }
@@ -46,16 +40,12 @@ public class ObjectifClass : MonoBehaviour, IObjects
             ObjectState = ObjectStates.HighDamaged;
         }
 
-        if (newState == ObjectStates.Destroyed && ObjectState != ObjectStates.Destroyed)
+        if (newState == ObjectStates.Destroyed)
         {
             ObjectState = ObjectStates.Destroyed;
             Destroyed();
         }
     }
 
-    public ObjectStates GetObjectState()
-    {
-        return ObjectState;
-    }
 
 }
