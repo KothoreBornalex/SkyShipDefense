@@ -2,13 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static IStatistics;
 
 public class playerAttack : MonoBehaviour
 {
     // Fields
 
-    [SerializeField] private LayerMask _damageableLayerMask;
+    [SerializeField] private LayerMask _ennemyLayerMask;
 
     [SerializeField] private GameObject _spell1Prefab;
     [SerializeField] private GameObject _spell2Prefab;
@@ -69,19 +68,16 @@ public class playerAttack : MonoBehaviour
 
             switch (_spellIndex)
             {
-                case 1:     // Si Faible dégats de zone
+                case 1:
                     UseSpell1(go, _playerAttacksData.Spell1DamageStats[_spell1Level], _playerAttacksData.Spell1RadiusStats[_spell1Level]);
                     break;
-
-                case 2:     // Si Fort dégats précis
+                case 2:
                     UseSpell2(go, _playerAttacksData.Spell2DamageStats[_spell2Level], _playerAttacksData.Spell2RadiusStats[_spell2Level]);
                     break;
-
-                case 3:     // Si Slow
+                case 3:
                     UseSpell3(go, _playerAttacksData.Spell3SlowStats[_spell3Level], _playerAttacksData.Spell3RadiusStats[_spell3Level]);
                     break;
-
-                default:        // Si aucune attaque
+                default:
                     Debug.LogWarning("Erreur ! Aucune attaque reconnue !");
                     break;
             }
@@ -89,43 +85,42 @@ public class playerAttack : MonoBehaviour
         }
     }
 
-    private void UseSpell1(Vector3 attackOrigin, int damageValue, float radius)     // Cast Faible dégats de zone
+    private void UseSpell1(Vector3 attackOrigin, int damageValue, float radius)     // Faible dégats de zone
     {
         GameObject att = Instantiate(_spell1Prefab, attackOrigin, Quaternion.identity);
-        Collider[] hitCollider = Physics.OverlapSphere(transform.position, radius, _damageableLayerMask);
+        Collider[] hitCollider = Physics.OverlapSphere(transform.position, radius, _ennemyLayerMask);
         DamageSpell(hitCollider, damageValue);
     }
-    private void UseSpell2(Vector3 attackOrigin, int damageValue, float radius)     // Cast Fort dégats précis
+    private void UseSpell2(Vector3 attackOrigin, int damageValue, float radius)     // Fort dégats précis
     {
         GameObject att = Instantiate(_spell2Prefab, attackOrigin, Quaternion.identity);
-        Collider[] hitCollider = Physics.OverlapSphere(transform.position, radius, _damageableLayerMask);
+        Collider[] hitCollider = Physics.OverlapSphere(transform.position, radius, _ennemyLayerMask);
         DamageSpell(hitCollider, damageValue);
     }
-    private void UseSpell3(Vector3 attackOrigin, int slowValue, float radius)       // Cast Freeze
+    private void UseSpell3(Vector3 attackOrigin, int slowValue, float radius)       // Freeze
     {
         GameObject att = Instantiate(_spell3Prefab, attackOrigin, Quaternion.identity);
-        Collider[] hitCollider = Physics.OverlapSphere(transform.position, radius, _damageableLayerMask);
+        Collider[] hitCollider = Physics.OverlapSphere(transform.position, radius, _ennemyLayerMask);
         SlowSpell(hitCollider, slowValue);
     }
 
-    private void DamageSpell(Collider[] colliders, int damageValue)     // Inflige dégats
+    private void DamageSpell(Collider[] colliders, int damageValue)
     {
         foreach (Collider collider in colliders)
         {
             if (collider.CompareTag("Ennemy"))
             {
-                collider.gameObject.GetComponent<IStatistics>().DecreaseStat(StatName.Health, damageValue);
+                // !!!!! Retirer la vie des ennemis
             }
         }
     }
-    private void SlowSpell(Collider[] colliders, int slowValue)     // Slow ennemis
+    private void SlowSpell(Collider[] colliders, int slowValue)
     {
         foreach(Collider collider in colliders)
         {
             if (collider.CompareTag("Ennemy"))
             {
-                // !!!!! Slow ennemis
-                //collider.gameObject.GetComponent<IStatistics>().DecreaseStat();
+                // !!!!! Slow ennemies
             }
         }
     }

@@ -34,9 +34,10 @@ public class GameManager : MonoBehaviour
     }
 
     [SerializeField] private GameState _currentGameState;
-    [SerializeField] private Transform[] _objectifs;
+    [SerializeField] private ObjectifStats[] _objectifs;
 
-    public Transform[] Objectifs { get => _objectifs; set => _objectifs = value; }
+    public ObjectifStats[] Objectifs { get => _objectifs; set => _objectifs = value; }
+
 
     #endregion
 
@@ -55,6 +56,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float _timeBetweenWave;
     private float _currentSpawnerTimer;
     private bool _inWaveHasStarted;
+
+    public int CurrentRound { get => _currentRound;}
+    public int UnitsDeadThisRound { get => _unitsDeadThisRound; set => _unitsDeadThisRound = value; }
+
     #endregion
 
 
@@ -70,10 +75,42 @@ public class GameManager : MonoBehaviour
 
     private void SpawnUnits()
     {
-        foreach(Transform t in _objectifs)
+        foreach(ObjectifStats objectif in _objectifs)
         {
-            AISpawner_Manager.instance.Spawn(FactionsEnum.Elf, SoldiersEnum.Larbin_A, t.position);
+            AISpawner_Manager.instance.Spawn(FactionsEnum.Elf, SoldiersEnum.Larbin_A, objectif.transform.position);
         }
+    }
+
+
+    public int GetObjectif()
+    {
+        int index = 0;
+
+        foreach (ObjectifStats objectif in _objectifs)
+        {
+            if (objectif.ObjectScript.GetObjectState() != IObjects.ObjectStates.Destroyed)
+            {
+                return index;
+            }
+
+            index++;
+        }
+
+        return 0;
+    }
+
+
+    public bool ObjectiveExist()
+    {
+        foreach (ObjectifStats objectif in _objectifs)
+        {
+            if(objectif.ObjectScript.GetObjectState() != IObjects.ObjectStates.Destroyed)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void UpdateGameStates()
@@ -174,7 +211,7 @@ public class GameManager : MonoBehaviour
     {
         _postWaveTimer += Time.deltaTime;
 
-        if(_postWaveTimer >= 15.0f)
+        if(_postWaveTimer >= 8.0f)
         {
             EndPostWave();
         }

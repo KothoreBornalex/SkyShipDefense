@@ -102,8 +102,14 @@ public class AISpawner_Manager : MonoBehaviour
 
     public void Spawn(FactionsEnum faction, SoldiersEnum soldier, Vector3 spawnPoint)
     {
-        GameObject soldierOject = _factionPoolsList[(int)faction]._poolsList[(int)soldier]._pool.Get().gameObject;
+
+        PooledObject instance = _factionPoolsList[(int)faction]._poolsList[(int)soldier]._pool.Get();
+        instance.transform.position = spawnPoint;
+        instance.AiClass.InitializedAI();
+
+        /*GameObject soldierOject = _factionPoolsList[(int)faction]._poolsList[(int)soldier]._pool.Get().gameObject;
         soldierOject.transform.position = spawnPoint;
+        soldierOject.GetComponent<AI_Class>().InitializedAI();*/
     }
 
 
@@ -152,6 +158,7 @@ public class AISpawner_Manager : MonoBehaviour
         }, aiObject =>
         {
             aiObject.gameObject.SetActive(true);
+
         }, aiObject =>
         {
             aiObject.gameObject.SetActive(false);
