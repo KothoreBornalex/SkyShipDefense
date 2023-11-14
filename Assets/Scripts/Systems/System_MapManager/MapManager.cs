@@ -47,7 +47,7 @@ public class MapManager : MonoBehaviour
 
     private void Start()
     {
-        _directionalLight = _directionalLightTransform.GetComponent<DirectionalLight>();
+       // _directionalLight = _directionalLightTransform.GetComponent<Light>();
     }
 
     // Update is called once per frame
