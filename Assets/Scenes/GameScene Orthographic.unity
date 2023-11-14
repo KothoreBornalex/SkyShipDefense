@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.3851593, g: 0.4724939, b: 0.6185859, a: 1}
+  m_IndirectSpecularColor: {r: 0.3851602, g: 0.47249502, b: 0.61858875, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4143,6 +4143,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1687775507}
     m_Modifications:
+    - target: {fileID: 132104, guid: 7a7ada80b7910bb47aa7c5434361abb6, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 196700, guid: 7a7ada80b7910bb47aa7c5434361abb6, type: 3}
       propertyPath: m_Name
       value: Clouds_Cumulonimbus_G1 (3)
