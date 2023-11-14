@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.3851602, g: 0.47249502, b: 0.61858875, a: 1}
+  m_IndirectSpecularColor: {r: 0.3851593, g: 0.4724939, b: 0.6185859, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2213,16 +2213,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isTimeSpeeding: 0
-  _slowTimeSpeed: 1
-  _fastTimeSpeed: 50
+  _slowTimeSpeed: 50
+  _fastTimeSpeed: 5
   _isSunRotating: 1
-  _rotatingSpeed: 1.5
+  _rotatingSpeed: 0.1
   _directionalLightTransform: {fileID: 705507995}
   _isBackGroundMoving: 1
   _backgroundElementsParent: {fileID: 1687775507}
-  _backgroundBoundingBox: {x: 402.34, y: 10, z: 800}
-  _boundingBoxColor: {r: 0.5424528, g: 0.9859853, b: 1, a: 0.62352943}
-  _backGroundMovingSpeed: 8
+  _backgroundBoundingBox: {x: 300, y: 10, z: 800}
+  _boundingBoxColor: {r: 0.7971698, g: 1, b: 0.9715126, a: 0.6862745}
+  _backGroundMovingSpeed: 0.1
   _backgroundElements:
   - {fileID: 1573357564}
   - {fileID: 55906822}
